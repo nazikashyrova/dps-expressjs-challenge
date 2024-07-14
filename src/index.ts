@@ -11,3 +11,7 @@ app.use(express.json());
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+app.get('/', (req, res) => {
+	res.json({ message: 'Hello, World!' });
+  });
