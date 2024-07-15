@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
-
+import db from './services/db.service';
 dotenv.config();
 
 const app: Express = express();
@@ -8,12 +8,16 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-const authenticateToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const token = req.headers['authorization'];
-    if (token !== 'Password123') {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-    next();
+const authenticateToken = (
+	req: express.Request,
+	res: express.Response,
+	next: express.NextFunction,
+) => {
+	const token = req.headers['authorization'];
+	if (token !== 'Password123') {
+		return res.status(401).json({ message: 'Unauthorized' });
+	}
+	next();
 };
 
 app.use(authenticateToken);
@@ -24,4 +28,9 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
 	res.json({ message: 'Hello, World!' });
-  });
+});
+
+app.get('/test-db', (req, res) => {
+	const result = db.query('SELECT * FROM sqlite_master');
+	res.json(result);
+});
